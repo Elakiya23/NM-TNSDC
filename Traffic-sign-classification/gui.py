@@ -6,7 +6,7 @@ from PIL import ImageTk, Image
 import numpy
 #load the trained model to classify sign
 from keras.models import load_model
-model = load_model('traffic_classifier.h5')
+model = load_model("traffic_classifier.h5")
 
 #dictionary to label all traffic signs class.
 classes = { 1:'Speed limit (20km/h)',
@@ -69,8 +69,13 @@ def classify(file_path):
     image = numpy.expand_dims(image, axis=0)
     image = numpy.array(image)
     print(image.shape)
-    pred = model.predict_classes([image])[0]
-    sign = classes[pred+1]
+    pred = model.predict([image])
+    if len(pred.shape) == 1:
+    	pred = np.expand_dims(pred, axis=0)[0]
+
+    # Now, you can use np.argmax along axis 1
+    predicted_classes = np.argmax(pred, axis=1)[0]
+    sign = classes[predicted_classes+1]
     print(sign)
     label.configure(foreground='#011638', text=sign) 
    

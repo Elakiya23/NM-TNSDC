@@ -45,10 +45,11 @@ print(X_train.shape, X_test.shape, y_train.shape, y_test.shape)
 y_train = to_categorical(y_train, 43)
 y_test = to_categorical(y_test, 43)
 
+
 #Building the model
 model = Sequential()
-model.add(Conv2D(filters=32, kernel_size=(5,5), activation='relu', input_shape=X_train.shape[1:]))
-model.add(Conv2D(filters=32, kernel_size=(5,5), activation='relu'))
+model.add(Conv2D(filters=32, kernel_size=(3,3), activation='relu', input_shape=X_train.shape[1:]))
+model.add(Conv2D(filters=32, kernel_size=(3,3), activation='relu'))
 model.add(MaxPool2D(pool_size=(2, 2)))
 model.add(Dropout(rate=0.25))
 model.add(Conv2D(filters=64, kernel_size=(3, 3), activation='relu'))
@@ -65,7 +66,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accur
 
 epochs = 15
 history = model.fit(X_train, y_train, batch_size=32, epochs=epochs, validation_data=(X_test, y_test))
-model.save("my_model.h5")
+model.save("my_model.keras")
 
 #plotting graphs for accuracy 
 plt.figure(0)
@@ -103,10 +104,11 @@ for img in imgs:
 
 X_test=np.array(data)
 
-pred = model.predict_classes(X_test)
+pred = model.predict(X_test)
+predicted_classes = np.argmax(pred, axis=1)
 
 #Accuracy with the test data
 from sklearn.metrics import accuracy_score
-print(accuracy_score(labels, pred))
+print(accuracy_score(labels, predicted_classes))
 
-model.save('traffic_classifier.h5')
+model.save("traffic_classifier.h5")
